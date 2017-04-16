@@ -1,4 +1,4 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name        ChatAlert-Freewar
 // @namespace   Freewar
 // @include     *.freewar.de/freewar/internal/chattext*
@@ -13,22 +13,15 @@ console.debug = function(){};
 var g_msgCnt = GM_getValue("g_msgCnt",0);
 var m_msgCnt = 0;
 var player = document.createElement('audio');
-player.src = 'https://dl.dropboxusercontent.com/u/69238990/buzz.mp3';
-//player.src = 'file:///Users/forkent/Library/Application%20Support/Firefox/Profiles/0bumm5m4.default/gm_scripts/ChatAlert-Freewar/buzz.mp3';
+player.src = 'https://www.dropbox.com/s/conxfgyx12rhfkn/buzz.mp3?dl=1';
 player.preload = 'auto';
 
 
 /******* Functions *******/
-$('.chattextwhisper').each(function(index,element){ 
+$('.chattextwhisper').each(function(index,element){
     console.debug("InnerHtml: " + element.innerHTML);
-    if(element.innerHTML.indexOf('Nachricht') > -1) m_msgCnt++; 
+    if(element.innerHTML.indexOf('Nachricht') > -1) m_msgCnt++;
 });
-
-/******* Debugging Functions *******/
-//$('.chattext').each(function(index,element){ 
-//    console.debug("InnerHtml: " + element.innerHTML);
-//    if(element.innerHTML.indexOf('Gold') > -1) m_msgCnt++; 
-//});
 
 /******* Main *******/
 console.debug("g_msgCnt: " + g_msgCnt);

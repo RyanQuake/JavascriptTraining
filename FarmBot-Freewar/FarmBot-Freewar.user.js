@@ -22,7 +22,7 @@ var ShroomBorder = -1*Math.floor(getplayerExpectedLife()*0.1);
 var AutoChase = GM_getValue( "AutoChase" , false);
 var AutoHeal = GM_getValue( "AutoHeal" , false);
 var currentLP = getcurrentLP();
-var critLPvalue = Math.floor(getplayerExpectedLife()/4);
+var critLPvalue = Math.floor(getplayerExpectedLife()/3);
 var chaseBorder = Math.floor(getplayerExpectedLife()/5)*-1;
 var npcData = new Array();
 if (localStorage.getItem("AutoWalk") != null) {
@@ -31,10 +31,10 @@ if (localStorage.getItem("AutoWalk") != null) {
     var AutoWalk = 0;
 }
 
-//console.debug("currentLP: " + currentLP);
-//console.debug("critLPvalue: " + critLPvalue);
-//console.debug("chaseBorder: " + chaseBorder);
-//console.debug("ShroomBorder: " + ShroomBorder);
+console.debug("currentLP: " + currentLP);
+console.debug("critLPvalue: " + critLPvalue);
+console.debug("chaseBorder: " + chaseBorder);
+console.debug("ShroomBorder: " + ShroomBorder);
 
 function updateShroomFarm() {
     switch (GM_getValue("ShroomFarm")) {
@@ -45,7 +45,7 @@ function updateShroomFarm() {
             AutoChase = false;
             document.getElementById("textField_Chase").value = AutoChase ? "On" : "Off";
             break;
-        case 2: 
+        case 2:
             GM_setValue("ShroomFarm", 0 );
             ShroomFarm = 0;
             break;
@@ -57,7 +57,7 @@ function updateShroomFarm() {
 
 function getShroomFarmString(){
     var retString = "Off";
-    
+
     switch (ShroomFarm) {
         case 1:
             retString = "List";
@@ -92,13 +92,13 @@ function updateAutoHeal() {
 }
 
 function updateAutoWalk() {
-	if("1"=== AutoWalk) {
+    if("1"=== AutoWalk) {
         AutoWalk = 0;
         localStorage.setItem("AutoWalk", AutoWalk);
-	}else{
-		AutoWalk = 1;
+    }else{
+        AutoWalk = 1;
         localStorage.setItem("AutoWalk", AutoWalk);
-	}
+    }
 }
 
 /******* Functions *******/
@@ -124,9 +124,9 @@ function attack() {
             setTimeout(function() {
                 window.location.href = linkStr;
                 console.debug("I DO AUTOATTACK!!");
-            }, getRandomInt(348, 869));    
+            }, getRandomInt(348, 869));
         }
-    }); 
+    });
 }
 
 function checkShroomBorder() {
@@ -134,7 +134,7 @@ function checkShroomBorder() {
     for (var i = -1; i >= ShroomBorder; i--) {
         if ( $("a:contains('"+i+"')").length != 0 ){
             retVal = true;
-            break; 
+            break;
         }
     }
     return retVal;
@@ -146,7 +146,7 @@ function getNpcStrength() {
         var string = i + " LP";
         if ( $("a:contains('"+string+"')").length != 0 ){
             retVal = i;
-            break; 
+            break;
         }
     }
     return retVal;
@@ -157,26 +157,31 @@ function chase() {
     for (var i = -1; i >= chaseBorder; i--) {
         if ( $("a:contains('"+i+"')").length != 0 ){
             checkStrength = $("a:contains('"+i+"')");
-            break; 
+            break;
         }
     }
     if (checkStrength.length) {
         var TargetLink = $("a:contains('Verjagen')")
-        setTimeout(function() { 
-            window.location.href = TargetLink[0].href; 
+        setTimeout(function() {
+            window.location.href = TargetLink[0].href;
             console.debug("I DO AUTOCHASE!!");
-        }, getRandomInt(400, 850)); 
+        }, getRandomInt(400, 850));
     }
 }
 
 function heal() {
-    var TargetLink = $('a[href*="drinkwater"]');
+
+    if ($('a[href*="=tee"]').length) {
+        var TargetLink = $('a[href*="tee"]');
+    } else {
+        var TargetLink = $('a[href*="=drinkwater"]');
+    }
+
     if (TargetLink.length) {
         setTimeout(function() {
             window.location.href = TargetLink[0].href;
             console.debug("I DO AUTOHEAL!!");
         }, getRandomInt(400, 850));
-        
     }
 }
 
@@ -204,7 +209,7 @@ function getcurrentLP() {
         var string = document.getElementById('listrow_lifep').innerHTML;
         var indexStart = string.lastIndexOf('<b>') + 3;
         var indexEnd = string.lastIndexOf('</b>');
-        currentLP = parseFloat(string.substr(indexStart,indexEnd-indexStart));        
+        currentLP = parseFloat(string.substr(indexStart,indexEnd-indexStart));
         GM_setValue('currentLP', currentLP);
     }
     return GM_getValue( "currentLP" , 0);
@@ -216,7 +221,7 @@ function getplayerExpectedLife(){
         var indexStart = string.lastIndexOf('/') + 1;
         var indexEnd = string.lastIndexOf(')');
         playerExpectedLife = parseFloat(string.substr(indexStart,indexEnd-indexStart));
-        
+
         GM_setValue('playerExpectedLife',playerExpectedLife);
     }
     return GM_getValue( "playerExpectedLife" , 0);
@@ -225,7 +230,7 @@ function getplayerExpectedLife(){
 /******* Init/Create Button *******/
 var xNode           = document.createElement ('div');
     xNode.innerHTML = '<button id="myButton_Shroom" type="button" style="width:90px">'
-                    + 'ShroomFarm' + '</button>' 
+                    + 'ShroomFarm' + '</button>'
                     + '<input id="textField_Shroom" type="text" value="0" align="right"'
                     + 'size="7" + readonly="readonly"/>';
     xNode.setAttribute ('id', 'myContainer_Shroom');
@@ -244,7 +249,7 @@ function ButtonClickAction_Shroom () {
 
 var yNode           = document.createElement ('div');
     yNode.innerHTML = '<button id="myButton_Chase" type="button" style="width:90px">'
-                    + 'AutoChase' + '</button>' 
+                    + 'AutoChase' + '</button>'
                     + '<input id="textField_Chase" type="text" value="0" align="right"'
                     + 'size="7" + readonly="readonly"/>';
     yNode.setAttribute ('id', 'myContainer_Chase');
@@ -263,7 +268,7 @@ function ButtonClickAction_Chase () {
 
 var zNode           = document.createElement ('div');
     zNode.innerHTML = '<button id="myButton_Heal" type="button" style="width:90px">'
-                    + 'AutoHeal' + '</button>' 
+                    + 'AutoHeal' + '</button>'
                     + '<input id="textField_Heal" type="text" value="0" align="right"'
                     + 'size="7" + readonly="readonly"/>';
     zNode.setAttribute ('id', 'myContainer_Heal');
@@ -282,7 +287,7 @@ function ButtonClickAction_Heal () {
 
 var kpNode           = document.createElement ('div');
     kpNode.innerHTML = '<button id="myButton_AutoWalk" type="button" style="width:90px">'
-                    + 'AutoWalk' + '</button>' 
+                    + 'AutoWalk' + '</button>'
                     + '<input id="textField_AutoWalk" type="text" value="0" align="right"'
                     + 'size="7" + readonly="readonly"/>';
     kpNode.setAttribute ('id', 'myContainer_AutoWalk');
@@ -322,7 +327,7 @@ if (ShroomFarm === 2) {
             attack();
             setTimeout(function() { window.location.reload(); }, 1000);
         }
-    }  
+    }
 }
 
 if (ShroomFarm === 1 && currentLP > 0) {
@@ -332,14 +337,14 @@ if (ShroomFarm === 1 && currentLP > 0) {
 
 if (AutoChase === true && currentLP > critLPvalue) {
     console.debug("AutoChase === true && currentLP > critLPvalue");
-    setTimeout(function() { 
+    setTimeout(function() {
         chase();
     }, getRandomInt(980, 1565));
 }
 
 if (AutoHeal === true && currentLP <= critLPvalue) {
     console.debug("AutoHeal === true && currentLP <= critLPvalue");
-    setTimeout(function() { 
+    setTimeout(function() {
         heal();
     }, getRandomInt(690, 890));
 }
